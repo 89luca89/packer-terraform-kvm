@@ -1,11 +1,11 @@
 # variables that can be overriden
 variable "hostname" { default = "centos-terraform" }
 variable "domain" { default = "example.com" }
-variable "memoryMB" { default = 1024*2 }
+variable "memoryMB" { default = 1024 * 2 }
 variable "cpu" { default = 2 }
 
 # 15Gb for root filesystem
-variable "rootdiskBytes" { default = 1024*1024*1024*15 }
+variable "rootdiskBytes" { default = 1024 * 1024 * 1024 * 15 }
 
 # instance the provider
 provider "libvirt" {
@@ -23,32 +23,41 @@ provider "libvirt" {
 # Base OS image to use to create a cluster of different
 # nodes
 resource "libvirt_volume" "os_image" {
-  name          = "packer-template-centos8"
-  source        = pathexpand("~/VirtualMachines/centos8-terraform.qcow2")
-  pool          = "pool"
-  format        = "qcow2"
+  name   = "packer-template-centos8"
+  source = pathexpand("~/VirtualMachines/centos8-terraform.qcow2")
+  pool   = "pool"
+  format = "qcow2"
 }
 
 # Create the machine
 resource "libvirt_domain" "domain-centos" {
-  name = var.hostname
+  name   = var.hostname
   memory = var.memoryMB
-  vcpu = var.cpu
+  vcpu   = var.cpu
 
   #disk { file = pathexpand("~/Downloads/CentOS-8.1.1911-x86_64-dvd1.iso") }
   # disk { file = libvirt_volume.template.source }
   disk { volume_id = libvirt_volume.os_image.id }
-  boot_device { dev = [ "cdrom", "hd", "network" ] }
+  boot_device { dev = ["cdrom", "hd", "network"] }
 
   # uses DHCP
+  # network_interface {
+  #   network_name = "default"
+  # }
+
+  # uses static  IP
   network_interface {
     network_name = "default"
+    hostname       = "centos8-test-machine"
+    addresses      = ["192.168.124.203"]
+    mac            = "AA:BB:CC:11:22:22"
+    wait_for_lease = true
   }
 
   # IMPORTANT
   # it will show no console otherwise
   video {
-    type        = "qxl"
+    type = "qxl"
   }
 
   # IMPORTANT
@@ -61,10 +70,25 @@ resource "libvirt_domain" "domain-centos" {
   }
 
   graphics {
-    type = "spice"
+    type        = "spice"
     listen_type = "none"
-    autoport = "true"
+    autoport    = "true"
   }
+
+  # connection {
+  #   type     = "ssh"
+  #   host     = self.public_ip
+  #   user     = "root"
+  #   password = "root"
+  # }
+
+  # provisioner "remote-exec" {
+  #   inline = ["echo first", "echo first second"]
+  # }
+
+  # provisioner "remote-exec" {
+  #   inline = ["echo second"]
+  # }
 }
 
 terraform {
