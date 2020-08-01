@@ -1,1 +1,7 @@
 *.iso
+.terraform/
+artifacts/
+packer_cache/
+tags
+terraform.tfstate
+terraform.tfstate.backup
