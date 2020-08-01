@@ -75,20 +75,20 @@ resource "libvirt_domain" "domain-centos" {
     autoport    = "true"
   }
 
-  # connection {
-  #   type     = "ssh"
-  #   host     = self.public_ip
-  #   user     = "root"
-  #   password = "root"
-  # }
+  connection {
+    type     = "ssh"
+    host     = "${self.network_interface[0].addresses[0]}"
+    user     = "root"
+    password = "root"
+  }
 
-  # provisioner "remote-exec" {
-  #   inline = ["echo first", "echo first second"]
-  # }
+  provisioner "remote-exec" {
+    inline = ["echo first", "echo first second"]
+  }
 
-  # provisioner "remote-exec" {
-  #   inline = ["echo second"]
-  # }
+  provisioner "remote-exec" {
+    inline = ["echo second"]
+  }
 }
 
 terraform {
