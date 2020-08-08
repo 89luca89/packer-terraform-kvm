@@ -47,8 +47,8 @@ resource "libvirt_domain" "domain-centos" {
 
   # uses static  IP
   network_interface {
-    network_name = "default"
-    hostname       = "centos8-test-machine"
+    network_name   = "default"
+    hostname       = var.hostname
     addresses      = ["192.168.124.203"]
     mac            = "AA:BB:CC:11:22:22"
     wait_for_lease = true
@@ -59,6 +59,17 @@ resource "libvirt_domain" "domain-centos" {
   video {
     type = "qxl"
   }
+
+  #  hostdev {
+  #    type = "usb"
+  #    mode = "subsystem"
+  #    managed = "yes"
+  #  }
+
+  # USB Passtrought
+  #  xml {
+  #  xslt = file("usb_passtrought.xsl")
+  #}
 
   # IMPORTANT
   # centos can hang is a isa-serial is not present at boot time.
@@ -77,9 +88,13 @@ resource "libvirt_domain" "domain-centos" {
 
   connection {
     type     = "ssh"
-    host     = "${self.network_interface[0].addresses[0]}"
+    host     = self.network_interface[0].addresses[0]
     user     = "root"
     password = "root"
+  }
+
+  provisioner "local-exec" {
+    command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file hostdev.xml --live --persistent"
   }
 
   provisioner "remote-exec" {
