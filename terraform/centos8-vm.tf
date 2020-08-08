@@ -1,24 +1,14 @@
 # variables that can be overriden
 variable "hostname" { default = "centos-terraform" }
-variable "domain" { default = "example.com" }
-variable "memoryMB" { default = 1024 * 2 }
+variable "domain" { default = "lan" }
+variable "memory_mb" { default = 1024 * 4 }
 variable "cpu" { default = 2 }
-
-# 15Gb for root filesystem
-variable "rootdiskBytes" { default = 1024 * 1024 * 1024 * 15 }
+variable "macvtap_iface" { default = "eth0" }
 
 # instance the provider
 provider "libvirt" {
   uri = "qemu:///system"
 }
-
-
-# resource "libvirt_volume" "os_image" {
-#   name           = "${var.hostname}-root.qcow2"
-#   pool           = "pool"
-#   size           = var.rootdiskBytes
-#   format         = "qcow2"
-# }
 
 # Base OS image to use to create a cluster of different
 # nodes
@@ -32,18 +22,15 @@ resource "libvirt_volume" "os_image" {
 # Create the machine
 resource "libvirt_domain" "domain-centos" {
   name   = var.hostname
-  memory = var.memoryMB
+  memory = var.memory_mb
   vcpu   = var.cpu
 
-  #disk { file = pathexpand("~/Downloads/CentOS-8.1.1911-x86_64-dvd1.iso") }
-  # disk { file = libvirt_volume.template.source }
+  cpu = {
+    mode = "host-passthrough"
+  }
+
   disk { volume_id = libvirt_volume.os_image.id }
   boot_device { dev = ["cdrom", "hd", "network"] }
-
-  # uses DHCP
-  # network_interface {
-  #   network_name = "default"
-  # }
 
   # uses static  IP
   network_interface {
@@ -54,19 +41,15 @@ resource "libvirt_domain" "domain-centos" {
     wait_for_lease = true
   }
 
+  network_interface {
+    macvtap  = var.macvtap_iface
+    hostname = var.hostname
+  }
+
   # IMPORTANT
   # it will show no console otherwise
   video {
     type = "qxl"
-  }
-
-  # IMPORTANT
-  # centos can hang is a isa-serial is not present at boot time.
-  # If you find your CPU 100% and never is available this is why
-  console {
-    type        = "pty"
-    target_port = "0"
-    target_type = "serial"
   }
 
   graphics {
@@ -83,17 +66,17 @@ resource "libvirt_domain" "domain-centos" {
   }
 
   # Hostdev passtrought
-  provisioner "local-exec" {
-    command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file passtrought-host.xml --live --persistent"
-  }
+  # provisioner "local-exec" {
+  #   command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file passtrought-host.xml --live --persistent"
+  # }
 
-  provisioner "remote-exec" {
-    inline = ["echo first", "echo first second"]
-  }
+  # provisioner "remote-exec" {
+  #   inline = ["echo first", "echo first second"]
+  # }
 
-  provisioner "remote-exec" {
-    inline = ["echo second"]
-  }
+  # provisioner "remote-exec" {
+  #   inline = ["echo second"]
+  # }
 }
 
 terraform {
