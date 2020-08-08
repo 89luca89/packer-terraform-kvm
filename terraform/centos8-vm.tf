@@ -84,7 +84,7 @@ resource "libvirt_domain" "domain-centos" {
 
   # Hostdev passtrought
   provisioner "local-exec" {
-    command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file hostdev.xml --live --persistent"
+    command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file passtrought-host.xml --live --persistent"
   }
 
   provisioner "remote-exec" {
