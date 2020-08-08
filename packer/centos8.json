@@ -7,7 +7,7 @@
       ],
       "disk_cache": "none",
       "disk_interface": "virtio",
-      "disk_size": "10240",
+      "disk_size": "50240",
       "format": "qcow2",
       "headless": "false",
       "http_directory": ".",
