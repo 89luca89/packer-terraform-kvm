@@ -2,6 +2,13 @@
 
 This repo is an example of packer+terraform combo to create a centos8 VM from plain iso.
 
+to start:
+
+`mkdir ~/VirtualMachines`
+
+to create the folder where we put our examples.
+
+To start creating the first VM:
 
 `make iso`
 
