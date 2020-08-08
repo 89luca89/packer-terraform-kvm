@@ -3,7 +3,7 @@ variable "hostname" { default = "centos-terraform" }
 variable "domain" { default = "lan" }
 variable "memory_mb" { default = 1024 * 4 }
 variable "cpu" { default = 2 }
-variable "macvtap_iface" { default = "eth0" }
+variable "macvtap_iface" { default = "enp0s31f6" }
 
 # instance the provider
 provider "libvirt" {
@@ -31,6 +31,12 @@ resource "libvirt_domain" "domain-centos" {
 
   disk { volume_id = libvirt_volume.os_image.id }
   boot_device { dev = ["cdrom", "hd", "network"] }
+
+  filesystem {
+    source   = pathexpand("~/")
+    target   = "mnt"
+    readonly = false
+  }
 
   # uses static  IP
   network_interface {
