@@ -3,19 +3,13 @@ PROJECT := $(THISDIR)
 
 
 apply: ## applies this
-	pushd terraform
-	terraform apply -auto-approve
-	popd
+	cd terraform &&	terraform apply -auto-approve
 
 init: ## first time
-	pushd terraform
-	terraform init
-	popd
+	cd terraform &&	terraform init
 
 destroy:
-	pushd terraform
-	terraform destroy -auto-approve
-	popd
+	cd terraform &&	terraform destroy -auto-approve
 
 ## create public/private keypair for ssh
 create-keypair:
@@ -23,15 +17,11 @@ create-keypair:
 	ssh-keygen -t rsa -b 4096 -f id_rsa -C $(PROJECT) -N "" -q
 
 metadata:
-	pushd terraform
-	terraform refresh && terraform output ips
-	popd
+	cd terraform &&	terraform refresh && terraform output ips
 
 iso:
-	pushd packer
-	packer build centos8.json
-	cp -f artifacts/qemu/packer-template-centos8-x86_64 ~/VirtualMachines/centos8-terraform.qcow2
-	popd
+	cd packer && packer build centos8.json
+	cp -f packer/artifacts/qemu/packer-template-centos8-x86_64 ~/VirtualMachines/centos8-terraform.qcow2
 
 ## list make targets
 ## https://stackoverflow.com/questions/4219255/how-do-you-get-the-list-of-targets-in-a-makefile
