@@ -60,17 +60,6 @@ resource "libvirt_domain" "domain-centos" {
     type = "qxl"
   }
 
-  #  hostdev {
-  #    type = "usb"
-  #    mode = "subsystem"
-  #    managed = "yes"
-  #  }
-
-  # USB Passtrought
-  #  xml {
-  #  xslt = file("usb_passtrought.xsl")
-  #}
-
   # IMPORTANT
   # centos can hang is a isa-serial is not present at boot time.
   # If you find your CPU 100% and never is available this is why
@@ -93,6 +82,7 @@ resource "libvirt_domain" "domain-centos" {
     password = "root"
   }
 
+  # Hostdev passtrought
   provisioner "local-exec" {
     command = "virsh --connect qemu:///system  attach-device ${var.hostname} --file hostdev.xml --live --persistent"
   }

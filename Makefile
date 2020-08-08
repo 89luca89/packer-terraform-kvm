@@ -24,6 +24,7 @@ metadata:
 
 iso:
 	packer build centos8.json
+	cp -f artifacts/qemu/packer-template-centos8-x86_64 ~/VirtualMachines/centos8-terraform.qcow2
 
 ## list make targets
 ## https://stackoverflow.com/questions/4219255/how-do-you-get-the-list-of-targets-in-a-makefile
