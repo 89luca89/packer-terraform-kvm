@@ -22,12 +22,10 @@ create-keypair:
 metadata:
 	terraform refresh && terraform output ips
 
-get-iso:
-	wget -P ~/Downloads http://releases.ubuntu.com/18.04/ubuntu-18.04.4-live-server-amd64.iso
+iso:
+	packer build centos8.json
 
 ## list make targets
 ## https://stackoverflow.com/questions/4219255/how-do-you-get-the-list-of-targets-in-a-makefile
 list:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
-
-
