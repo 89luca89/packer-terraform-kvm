@@ -1,0 +1,48 @@
+{
+  "builders" : [ {
+        "accelerator" : "kvm",
+        "boot_command" : [
+            "<esc><enter><wait>",
+            " linux ",
+            " biosdevname=0 ",
+            " net.ifnames=0 ",
+            " netdevice=eth0 ",
+            " netsetup=dhcp ",
+            " lang=en_US autoyast=http://{{ .HTTPIP }}:{{ .HTTPPort }}/autoyast.xml<wait>",
+            " textmode=1<wait>",
+            "<enter><wait>"
+          ],
+        "disk_cache" : "none",
+        "disk_interface" : "virtio",
+        "disk_size" : "50240",
+        "format" : "qcow2",
+        "headless" : "false",
+        "http_directory" : ".",
+        "iso_checksum" : "158503ab5ef73a79499434078c3c8e412ca99ec6",
+        "iso_urls" : "openSUSE-Leap-15.2-DVD-x86_64.iso",
+        "name" : "template-opensuse15.2-x86_64",
+        "net_device" : "virtio-net",
+        "output_directory" : "artifacts/qemu",
+        "qemuargs" : [
+            [
+              "-m",
+              "2048M"
+            ],
+            [
+              "-smp",
+              "2"
+            ]
+          ],
+        "qemu_binary" : "/usr/bin/qemu-kvm",
+        "shutdown_command" : "while pgrep y2start; do sleep 5; done; /sbin/halt -h -p",
+        "ssh_password" : "root",
+        "ssh_timeout" : "30m",
+        "ssh_username" : "root",
+        "ssh_wait_timeout" : "30m",
+        "type" : "qemu"
+      } ],
+  "provisioners" : [ {
+        "inline" : [ "cp /etc/sysconfig/network/ifcfg-eth0 /etc/sysconfig/network/ifcfg-eth1" ],
+        "type" : "shell"
+      } ]
+}

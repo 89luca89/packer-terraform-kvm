@@ -1,5 +1,11 @@
 # variables that can be overriden
-variable "hostname" { default = "centos-terraform" }
+#
+#
+
+# to set hostname and source file use:
+#   -var 'hostname=example' -var 'source=~/VirtualMachines/example.qcow2'
+variable "hostname" { default = "base-hostname" }
+variable "disk_source" { default = "~/VirtualMachines/image-terraform.qcow2" }
 variable "domain" { default = "lan" }
 variable "memory_mb" { default = 1024 * 4 }
 variable "cpu" { default = 2 }
@@ -13,14 +19,14 @@ provider "libvirt" {
 # Base OS image to use to create a cluster of different
 # nodes
 resource "libvirt_volume" "os_image" {
-  name   = "packer-template-centos8"
-  source = pathexpand("~/VirtualMachines/centos8-terraform.qcow2")
+  name   = "packer-template"
+  source = pathexpand(var.disk_source)
   pool   = "pool"
   format = "qcow2"
 }
 
 # Create the machine
-resource "libvirt_domain" "domain-centos" {
+resource "libvirt_domain" "domain-terraform" {
   name   = var.hostname
   memory = var.memory_mb
   vcpu   = var.cpu
@@ -47,10 +53,10 @@ resource "libvirt_domain" "domain-centos" {
     wait_for_lease = true
   }
 
-  network_interface {
-    macvtap  = var.macvtap_iface
-    hostname = var.hostname
-  }
+ #  network_interface {
+ #    macvtap  = var.macvtap_iface
+ #    hostname = var.hostname
+ #  }
 
   # IMPORTANT
   # it will show no console otherwise
@@ -91,5 +97,5 @@ terraform {
 
 output "metadata" {
   # run 'terraform refresh' if not populated
-  value = libvirt_domain.domain-centos
+  value = libvirt_domain.domain-terraform
 }
