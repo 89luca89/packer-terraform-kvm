@@ -38,11 +38,25 @@ This will search for an install iso in the current directory, this example uses 
 
 change the value/path as needed for the test
 
-`make init; make apply` 
+```
+make init distro=centos8
+make apply distro=distro=centos8
+```
+
+or
+
+```
+make init distro=opensuse15.2
+make apply distro=distro=opensuse15.2
+```
 
 will proceede to use terraform to create the machine based on the packer output.
 
 
-`make destroy`
+`make destroy distro=centos8`
+
+or
+
+`make destroy distro=opensuse15.2`
 
 to remove all
