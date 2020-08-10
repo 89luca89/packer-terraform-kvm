@@ -1,6 +1,11 @@
 # Packer Terraform KVM Example
 
-This repo is an example of packer+terraform combo to create a centos8 VM from plain iso.
+This repo is an example of packer+terraform combo to create a VM from plain iso.
+
+Supported os for now are:
+
+- centos 8
+- opensuse leap 15.2
 
 This is based on Libvirt/KVM for virtualization, so it depends on the terraform provider for libvirt:
 
