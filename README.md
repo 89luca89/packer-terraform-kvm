@@ -47,7 +47,7 @@ or
 
 ```
 make init distro=opensuse15.2
-make apply distro=distro=opensuse15.2
+make apply distro=opensuse15.2
 ```
 
 will proceede to use terraform to create the machine based on the packer output.
