@@ -146,6 +146,7 @@
         <package>yast2-trans-en_US</package>
         <package>yast2</package>
         <package>zypper</package>
+        <package>vim</package>
     </packages>
     <patterns config:type="list">
         <pattern>sw_management</pattern>
