@@ -131,15 +131,17 @@
     <image/>
     <instsource/>
     <packages config:type="list">
+        <package>autoyast2</package>
         <package>curl</package>
         <package>glibc-locale</package>
+        <package>glibc</package>
         <package>grub2-branding-openSUSE</package>
         <package>grub2</package>
         <package>iputils</package>
-        <package>kernel-default-devel</package>
         <package>kernel-default</package>
-        <package>make</package>
-        <package>rsyslog</package>
+        <package>ntp</package>
+        <package>openssh</package>
+        <package>rsync</package>
         <package>sudo</package>
         <package>wget</package>
         <package>yast2-firstboot</package>
@@ -159,22 +161,58 @@
         <package>snapper-zypp-plugin</package>
     </remove-packages>
 </software>
-<services-manager>
-    <default_target>graphical</default_target>
-    <services>
-        <disable config:type="list"/>
-        <enable config:type="list">
-            <service>sshd</service>
-        </enable>
-    </services>
-</services-manager>
-<users config:type="list">
-    <user>
-        <username>root</username>
-        <user_password>root</user_password>
-    </user>
-</users>
-<kdump>
-    <add_crash_kernel config:type="boolean">false</add_crash_kernel>
-</kdump>
+
+<add-on>
+    <add_on_products config:type="list">
+        <listentry>
+            <media_url>http://download.opensuse.org/distribution/leap/15.2/repo/oss/</media_url>
+            <product>repo-oss</product>
+            <product_dir>/</product_dir>
+            <ask_on_error config:type="boolean">false</ask_on_error>
+            <name>repo-oss</name>
+        </listentry>
+        <listentry>
+            <media_url>http://download.opensuse.org/distribution/leap/15.2/repo/non-oss/</media_url>
+            <product>repo-non-oss</product>
+            <product_dir>/</product_dir>
+            <ask_on_error config:type="boolean">false</ask_on_error>
+            <name>repo-non-oss</name>
+        </listentry>
+        <!--
+            <listentry>
+            <media_url>http://download.opensuse.org/update/leap/15.2/oss/</media_url>
+            <product>repo-update-oss</product>
+            <product_dir>/</product_dir>
+            <ask_on_error config:type="boolean">false</ask_on_error>
+            <name>repo-update-oss</name>
+            </listentry>
+            <listentry>
+            <media_url>http://download.opensuse.org/update/leap/15.2/non-oss/</media_url>
+            <product>repo-update-non-oss</product>
+            <product_dir>/</product_dir>
+            <ask_on_error config:type="boolean">false</ask_on_error>
+            <name>repo-update-non-oss</name>
+            </listentry>
+        -->
+        </add_on_products>
+    </add-on>
+
+    <services-manager>
+        <default_target>graphical</default_target>
+        <services>
+            <disable config:type="list"/>
+            <enable config:type="list">
+                <service>sshd</service>
+            </enable>
+        </services>
+    </services-manager>
+    <users config:type="list">
+        <user>
+            <username>root</username>
+            <user_password>root</user_password>
+        </user>
+    </users>
+    <kdump>
+        <add_crash_kernel config:type="boolean">false</add_crash_kernel>
+    </kdump>
 </profile>

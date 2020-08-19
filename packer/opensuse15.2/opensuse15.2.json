@@ -8,7 +8,7 @@
             " net.ifnames=0 ",
             " netdevice=eth0 ",
             " netsetup=dhcp ",
-            " lang=en_US autoyast=http://{{ .HTTPIP }}:{{ .HTTPPort }}/autoyast.xml<wait>",
+            " lang=en_US autoyast=http://{{ .HTTPIP }}:{{ .HTTPPort }}/autoyast.xml ",
             " textmode=1<wait>",
             "<enter><wait>"
           ],
@@ -42,7 +42,10 @@
         "type" : "qemu"
       } ],
   "provisioners" : [ {
-        "inline" : [ "cp /etc/sysconfig/network/ifcfg-eth0 /etc/sysconfig/network/ifcfg-eth1" ],
+        "inline" : [
+            "cp /etc/sysconfig/network/ifcfg-eth0 /etc/sysconfig/network/ifcfg-eth1"
+          ],
+        "inline_shebang" : "/bin/sh -eux",
         "type" : "shell"
       } ]
 }
