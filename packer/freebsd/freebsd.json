@@ -17,7 +17,7 @@
       "http_directory": ".",
       "iso_checksum": "aa9d34b458826486999ed3e872436b6712ae38cede5ea41de4ab923e3419d461",
       "iso_urls": "FreeBSD-12.1-RELEASE-amd64-disc1.iso",
-      "name": "template-centos8-x86_64",
+      "name": "template-freebsd-x86_64",
       "net_device": "virtio-net",
       "output_directory": "artifacts/qemu",
       "qemu_binary": "/usr/bin/qemu-kvm",
