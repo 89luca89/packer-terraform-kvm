@@ -50,8 +50,8 @@ resource "libvirt_domain" "domain-terraform" {
   network_interface {
     network_name   = "default"
     hostname       = var.hostname
-    addresses      = ["192.168.122.241"]
-    mac            = "AA:BB:CC:11:24:23"
+    # addresses      = ["192.168.122.241"]
+    # mac            = "AA:BB:CC:11:24:23"
     wait_for_lease = true
   }
 
@@ -60,6 +60,15 @@ resource "libvirt_domain" "domain-terraform" {
   #    hostname = var.hostname
   #  }
 
+
+  # IMPORTANT
+  # Ubuntu can hang is a isa-serial is not present at boot time.
+  # If you find your CPU 100% and never is available this is why
+  console {
+    type        = "pty"
+    target_port = "0"
+    target_type = "serial"
+  }
   # IMPORTANT
   # it will show no console otherwise
   video {
@@ -101,7 +110,10 @@ terraform {
   required_version = ">= 0.12"
 }
 
-output "metadata" {
-  # run 'terraform refresh' if not populated
-  value = libvirt_domain.domain-terraform
+# output "metadata" {
+#   # run 'terraform refresh' if not populated
+#   value = libvirt_domain.domain-terraform
+# }
+output "ip" {
+  value = "${libvirt_domain.domain-terraform.network_interface.0.addresses.0}"
 }

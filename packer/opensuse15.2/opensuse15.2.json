@@ -41,11 +41,13 @@
         "ssh_wait_timeout" : "30m",
         "type" : "qemu"
       } ],
-  "provisioners" : [ {
+  "provisioners" : [
+      {
         "inline" : [
             "cp /etc/sysconfig/network/ifcfg-eth0 /etc/sysconfig/network/ifcfg-eth1"
           ],
         "inline_shebang" : "/bin/sh -eux",
         "type" : "shell"
-      } ]
+      }
+  ]
 }
