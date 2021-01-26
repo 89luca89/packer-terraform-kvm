@@ -1,43 +1,40 @@
 {
-  "builders": [
-    {
-      "accelerator": "kvm",
-      "boot_wait": "30s",
-      "boot_command": [
-        "<down><enter><wait>",
-        "dhclient -p /tmp/dhclient.pid -l /tmp/dhclient.lease vtnet0<enter><wait5>",
-        "fetch -o /tmp/installerconfig http://{{ .HTTPIP }}:{{ .HTTPPort }}/installerconfig<enter><wait>",
-        "bsdinstall script /tmp/installerconfig; shutdown -r now<enter>"
-      ],
-      "disk_cache": "none",
-      "disk_interface": "virtio",
-      "disk_size": "50240",
-      "format": "qcow2",
-      "headless": "false",
-      "http_directory": ".",
-      "iso_checksum": "aa9d34b458826486999ed3e872436b6712ae38cede5ea41de4ab923e3419d461",
-      "iso_urls": "FreeBSD-12.1-RELEASE-amd64-disc1.iso",
-      "name": "template-freebsd-x86_64",
-      "net_device": "virtio-net",
-      "output_directory": "artifacts/qemu",
-      "qemu_binary": "/usr/bin/qemu-kvm",
-      "qemuargs": [
-        [
-          "-m",
-          "2048M"
-        ],
-        [
-          "-smp",
-          "2"
-        ]
-      ],
-      "shutdown_command": "shutdown -p now",
-      "ssh_password": "root",
-      "ssh_timeout": "30m",
-      "ssh_username": "root",
-      "type": "qemu"
-    }
-  ],
-  "provisioners": [
-  ]
+  "builders" : [ {
+        "accelerator" : "kvm",
+        "boot_command" : [
+            "<down><enter><wait>",
+            "dhclient -p /tmp/dhclient.pid -l /tmp/dhclient.lease vtnet0<enter><wait5>",
+            "fetch -o /tmp/installerconfig http://{{ .HTTPIP }}:{{ .HTTPPort }}/installerconfig<enter><wait>",
+            "bsdinstall script /tmp/installerconfig; shutdown -r now<enter>"
+          ],
+        "boot_wait" : "30s",
+        "disk_cache" : "none",
+        "disk_interface" : "virtio",
+        "disk_size" : "50240",
+        "format" : "qcow2",
+        "headless" : "false",
+        "http_directory" : ".",
+        "iso_checksum" : "aa9d34b458826486999ed3e872436b6712ae38cede5ea41de4ab923e3419d461",
+        "iso_urls" : "FreeBSD-12.1-RELEASE-amd64-disc1.iso",
+        "name" : "template-freebsd-x86_64",
+        "net_device" : "virtio-net",
+        "output_directory" : "artifacts/qemu",
+        "qemuargs" : [
+            [
+              "-m",
+              "2048M"
+            ],
+            [
+              "-smp",
+              "2"
+            ]
+          ],
+        "qemu_binary" : "/usr/bin/qemu-kvm",
+        "shutdown_command" : "shutdown -p now",
+        "ssh_password" : "root",
+        "ssh_timeout" : "30m",
+        "ssh_username" : "root",
+        "type" : "qemu"
+      } ],
+  "provisioners" : [  ]
 }
