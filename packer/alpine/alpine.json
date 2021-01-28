@@ -1,0 +1,53 @@
+{
+  "builders" : [ {
+        "accelerator" : "kvm",
+        "boot_command" : [
+            "root<enter><wait>",
+            "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+            "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/answers<enter><wait>",
+            "setup-apkrepos -1<enter><wait>",
+            "printf \"root\\nroot\\ny\\n\" | setup-alpine -f $PWD/answers && ",
+            "rc-service sshd stop && ",
+            "mount /dev/vda3 /mnt && ",
+            "echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config && ",
+            "umount /mnt && reboot<enter>"
+          ],
+        "boot_wait" : "30s",
+        "disk_cache" : "none",
+        "disk_interface" : "virtio",
+        "disk_size" : "50240",
+        "format" : "qcow2",
+        "headless" : false,
+        "http_directory" : ".",
+        "iso_checksum" : "c197f9cf095178d5ae978a47597a4004c16c879d2047b9906f91642cb01c2ef9",
+        "iso_urls" : [ "alpine-standard-3.13.0-x86_64.iso" ],
+        "name" : "template-alpine-x86_64",
+        "net_device" : "virtio-net",
+        "output_directory" : "artifacts/qemu",
+        "qemuargs" : [
+            [
+              "-m",
+              "2048M"
+            ],
+            [
+              "-smp",
+              "2"
+            ]
+          ],
+        "qemu_binary" : "/usr/bin/qemu-kvm",
+        "shutdown_command" : "poweroff",
+        "ssh_password" : "root",
+        "ssh_timeout" : "30m",
+        "ssh_username" : "root",
+        "ssh_handshake_attempts" : 100,
+        "type" : "qemu"
+      } ],
+  "provisioners" : [ {
+        "inline" : [
+            "echo http://dl-cdn.alpinelinux.org/alpine/v3.12/community >> /etc/apk/repositories",
+            "apk update",
+            "apk add sudo"
+          ],
+        "type" : "shell"
+      } ]
+}
