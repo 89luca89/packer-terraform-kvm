@@ -32,7 +32,7 @@ create-keypair:
 	ssh-keygen -t rsa -b 4096 -f id_rsa -C $(PROJECT) -N "" -q
 
 iso:
-	cd packer/$(distro) && packer build $(distro).json
+	cd packer/$(distro) && packer.io build $(distro).json
 	cp -f packer/$(distro)/artifacts/qemu/packer-template-$(distro)-x86_64 ~/VirtualMachines/$(distro)-terraform.qcow2
 	rm -rf packer/$(distro)/artifacts/qemu
 
