@@ -37,8 +37,9 @@
         "type" : "qemu"
       } ],
   "provisioners" : [ {
+        "execute_command": "chmod +x {{ .Path }}; env {{ .Vars }} {{ .Path }}",
         "inline" : [
-            "pkg -y"
+            "pkg install -y python36"
           ],
         "type" : "shell"
       } ]
