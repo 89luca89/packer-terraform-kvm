@@ -1,0 +1,84 @@
+{
+  "builders": [
+    {
+      "accelerator": "kvm",
+      "boot_wait": "0s",
+      "communicator": "winrm",
+      "cpus": 2,
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "./scripts/disable-screensaver.ps1",
+        "./scripts/disable-winrm.ps1",
+        "./scripts/enable-winrm.ps1",
+        "./scripts/unattend.xml",
+        "./scripts/sysprep.bat"
+      ],
+      "headless": false,
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "memory": "{{user `memory`}}",
+      "output_directory": "windows_2019-qemu",
+      "qemuargs": [
+        [
+          "-drive",
+          "file=windows_2019-qemu/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
+        ],
+        [
+          "-drive",
+          "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
+        ]
+      ],
+      "shutdown_command": "a:/sysprep.bat",
+      "type": "qemu",
+      "vm_name": "WindowsServer2019",
+      "winrm_password": "Password01x!",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+      "winrm_username": "Administrator"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "./scripts/enable-rdp.bat"
+      ],
+      "type": "windows-shell"
+    },
+    {
+      "scripts": [
+        "./scripts/vm-guest-tools.ps1",
+        "./scripts/debloat-windows.ps1"
+      ],
+      "type": "powershell"
+    },
+    {
+      "restart_timeout": "{{user `restart_timeout`}}",
+      "type": "windows-restart"
+    },
+    {
+      "execute_command": "{{ .Vars }} cmd /c \"{{ .Path }}\"",
+      "scripts": [
+        "./scripts/pin-powershell.bat",
+        "./scripts/set-winrm-automatic.bat",
+        "./scripts/uac-enable.bat",
+        "./scripts/dis-updates.bat"
+      ],
+      "type": "windows-shell"
+    }
+  ],
+  "variables": {
+    "autounattend": "./autounattend.xml",
+    "disk_size": "61440",
+    "disk_type_id": "1",
+    "memory": "2048",
+    "headless": "false",
+    "hyperv_switchname": "{{env `hyperv_switchname`}}",
+    "iso_checksum": "sha256:549bca46c055157291be6c22a3aaaed8330e78ef4382c99ee82c896426a1cee1",
+    "iso_url": "https://software-download.microsoft.com/download/pr/17763.737.190906-2324.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us_1.iso",
+    "manually_download_iso_from": "https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-2019",
+    "restart_timeout": "5m",
+    "virtio_win_iso": "~/virtio-win.iso",
+    "winrm_timeout": "2h"
+  }
+}
