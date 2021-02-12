@@ -1,0 +1,52 @@
+{
+  "builders" : [ {
+        "accelerator" : "kvm",
+        "boot_command" : [
+            "<esc><wait>",
+            "install <wait>",
+            " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+            "debian-installer=en_US.UTF-8 <wait>",
+            "auto <wait>",
+            "locale=en_US.UTF-8 <wait>",
+            "kbd-chooser/method=us <wait>",
+            "keyboard-configuration/xkb-keymap=us <wait>",
+            "netcfg/get_hostname=debian <wait>",
+            "netcfg/get_domain=vagrantup.com <wait>",
+            "fb=false <wait>",
+            "debconf/frontend=noninteractive <wait>",
+            "console-setup/ask_detect=false <wait>",
+            "console-keymaps-at/keymap=us <wait>",
+            "grub-installer/bootdev=/dev/vda <wait>",
+            "<enter><wait>"
+          ],
+        "boot_wait" : "2s",
+        "disk_cache" : "none",
+        "disk_interface" : "virtio",
+        "disk_size" : "50240",
+        "format" : "qcow2",
+        "headless" : "false",
+        "http_directory" : ".",
+        "iso_checksum" : "71c7e9eb292acc880f84605b1ca2b997f25737fe0a43fc9586f61d35cd2eb43b",
+        "iso_urls" : "debian-9.13.0-amd64-netinst.iso",
+        "name" : "template-debian9-x86_64",
+        "net_device" : "virtio-net",
+        "output_directory" : "artifacts/qemu",
+        "qemuargs" : [
+            [
+              "-m",
+              "2048M"
+            ],
+            [
+              "-smp",
+              "2"
+            ]
+          ],
+        "qemu_binary" : "/usr/bin/qemu-kvm",
+        "shutdown_command" : "shutdown -P now",
+        "ssh_password" : "root",
+        "ssh_timeout" : "30m",
+        "ssh_username" : "root",
+        "type" : "qemu"
+      } ],
+  "provisioners" : [  ]
+}
